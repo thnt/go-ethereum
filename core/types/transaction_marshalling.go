@@ -66,6 +66,12 @@ type txJSON struct {
 	MaxSubmissionFee    *hexutil.Big    `json:"maxSubmissionFee,omitempty"`    // SubmitRetryable
 	EffectiveGasPrice   *hexutil.Uint64 `json:"effectiveGasPrice,omitempty"`   // ArbLegacy
 	L1BlockNumber       *hexutil.Uint64 `json:"l1BlockNumber,omitempty"`       // ArbLegacy
+
+	// Optimism fields:
+	SourceHash *common.Hash `json:"sourceHash,omitempty"`
+	// From       *common.Address `json:"from,omitempty"`
+	Mint       *hexutil.Big `json:"mint,omitempty"`
+	IsSystemTx *bool        `json:"isSystemTx,omitempty"`
 }
 
 // yParityValue returns the YParity value from JSON. For backwards-compatibility reasons,
@@ -422,7 +428,7 @@ func (tx *Transaction) UnmarshalJSON(input []byte) error {
 		}
 
 	default:
-		return tx.unmarshalArbitrumJSON(dec)
+		return tx.unmarshalExtraTypes(dec)
 	}
 
 	// Now set the inner transaction.
@@ -430,4 +436,16 @@ func (tx *Transaction) UnmarshalJSON(input []byte) error {
 
 	// TODO: check hash here?
 	return nil
+}
+
+func (tx *Transaction) unmarshalExtraTypes(dec txJSON) error {
+	if err := tx.unmarshalArbitrumJSON(dec); err != ErrTxTypeNotSupported {
+		return err
+	}
+
+	if err := tx.unmarshalOptimismJSON(dec); err != ErrTxTypeNotSupported {
+		return err
+	}
+
+	return ErrTxTypeNotSupported
 }

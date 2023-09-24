@@ -12,6 +12,8 @@ import (
 )
 
 // Arbitrum tx type
+//
+// Ref: https://github.com/OffchainLabs/go-ethereum/
 const (
 	ArbitrumDepositTxType         = 0x64
 	ArbitrumUnsignedTxType        = 0x65
@@ -554,9 +556,9 @@ func (tx *ArbitrumSubmitRetryableTx) data() []byte {
 // 	return errors.New("ArbitrumSubmitRetryableTx not support decode method")
 // }
 
-func (tx *Transaction) GetInner() TxData {
-	return tx.inner.copy()
-}
+// func (tx *Transaction) GetInner() TxData {
+// 	return tx.inner.copy()
+// }
 
 func (tx *Transaction) unmarshalArbitrumJSON(dec txJSON) error {
 	var inner TxData
