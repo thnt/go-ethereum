@@ -2,9 +2,11 @@ package types
 
 import (
 	"errors"
+	"io"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/rlp"
 )
 
 // Optimism tx type
@@ -89,6 +91,11 @@ func (tx *DepositTx) setSignatureValues(chainID, v, r, s *big.Int) {
 type depositTxWithNonce struct {
 	DepositTx
 	EffectiveNonce uint64
+}
+
+// EncodeRLP ensures that RLP encoding this transaction excludes the nonce. Otherwise, the tx Hash would change
+func (tx *depositTxWithNonce) EncodeRLP(w io.Writer) error {
+	return rlp.Encode(w, tx.DepositTx)
 }
 
 func (tx *Transaction) unmarshalOptimismJSON(dec txJSON) error {
