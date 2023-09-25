@@ -522,3 +522,7 @@ func copyAddressPtr(a *common.Address) *common.Address {
 	cpy := *a
 	return &cpy
 }
+
+func (tx *Transaction) GetInner() TxData {
+	return tx.inner.copy()
+}

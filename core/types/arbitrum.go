@@ -556,10 +556,6 @@ func (tx *ArbitrumSubmitRetryableTx) data() []byte {
 // 	return errors.New("ArbitrumSubmitRetryableTx not support decode method")
 // }
 
-// func (tx *Transaction) GetInner() TxData {
-// 	return tx.inner.copy()
-// }
-
 func (tx *Transaction) unmarshalArbitrumJSON(dec txJSON) error {
 	var inner TxData
 
